@@ -119,6 +119,7 @@ footer{
 	margin: 20px;
 	padding:20px;
 	box-shadow: 0px 0px 10px 5px #fe0000;
+	height: 320px;
 }
 
 .contact-form label{
