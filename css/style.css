@@ -102,11 +102,15 @@ padding-bottom: 1%;
 	color:white;
 	margin: 10px;
 	display: inline-block;
-	position: absolute;
 	background: red;
 	padding: 50px;
+	bottom: 0px;
+	position: absolute;
 }
-
+footer{
+	height: 370px;
+	position: relative;
+}
 .contact-form{
 	background-color: lightgrey;
 	display: inline-block;
