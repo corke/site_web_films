@@ -1,7 +1,50 @@
-<!DOCTYPE html>
+<?php
+
+$subject = "";
+$name = "";
+$email = "";
+$message = "";
+$errors=[];
+
+$subject = filter_var(trim($_POST["subject"]), FILTER_SANITIZE_STRING);
+$name = filter_var(trim($_POST["name"]), FILTER_SANITIZE_STRING);
+$email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+$message = filter_var(trim($_POST["message"]), FILTER_SANITIZE_STRING);
+
+if(!empty($_POST)){
+    if(empty($_POST["subject"])){
+        $errors["subject"]="Oula ! Pas touche aux sujets ! :)";
+    }
+    if(empty($_POST["name"])){
+        $errors["name"]="Vous avez oubliez de saisir votre nom";
+    }
+    if(empty($_POST["email"])){
+        $errors["email"]="Vous avez oubliez de saisir votre email";
+    }elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        $errors["email"] = "Email invalide";
+    }
+    if(empty($_POST["message"])){
+        $errors["message"]="Vous avez oubliez de saisir votre message";
+    }
+
+    if(empty($errors)){
+        //Pas d'erreur = On confirme qu'on envoie le mesage
+        $confirmation = "Message bien envoyé ! Je reviens vers vous au plus vite !";
+
+        // on envoie un mail à l'admin
+        $subjectEmail = "Nouveau message de " . $email . " | Sujet : " . $subject;
+        $contentEmail = "auteur: " . $name . ", email: " . $email . ", contenu :";
+        $contentEmail .= $message;
+        mail("scork.creation@gmail.com", $subjectEmail, $contentEmail);
+
+        // je vide les valeurs dans les champs
+        $subject = $name = $email = $message = "";
+    }
+
+}
+?>
 <!DOCTYPE html>
 <html>
-
 <head>
 	<meta charset="utf-8">
 	<title>Julien-Films</title>
@@ -22,7 +65,8 @@
 				Bouton
 			</div>
 			<!-- Conteneur des meilleurs films par année -->
-			<div class="films">
+			<div class="films-year">
+				<div class="films">
 				<h2>Top films 2016</h2>
 				<ul>
 					<li class="film">
@@ -129,7 +173,7 @@
 					</li>
 				</ul>
 			</div>
-			<div class="films">
+				<div class="films">
 				<h2>Top films 2015</h2>
 				<ul>
 					<li class="film">
@@ -230,12 +274,45 @@
 					</li>
 				</ul>
 			</div>
+			</div>
 		</main>
-	</div>
 	<footer>
 		<div id="copyright">© JULIEN-FILMS - 2017</div>
-	</footer>
 
+
+		<div class="contact-form">
+			<form class="" id="confirmation" action="#confirmation" method="post">
+				<p>
+					<label for="subject">Sujet</label>
+					<select class="" name="subject">
+						<option value="info">Demande d'informations</option>
+						<option value="critique">Proposition de critique</option>
+						<option value="autres">Autres demandes</option>
+					</select>
+                    <span><?php if(isset($errors["subject"])) { echo $errors["subject"]; } ?></span>
+				</p>
+				<p>
+					<label for="name">Nom</label>
+					<input class=<?php if($_POST){if(isset($errors["name"])) { echo "error-form-input";}else{ echo "no_error-form-input" ;}} ?> type="text" name="name" value="<?php echo $name ?>" placeholder="Votre nom">
+                    <span><?php if(isset($errors["name"])) { echo $errors["name"]; } ?></span>
+				</p>
+				<p>
+					<label for="email">Email</label>
+					<input class=<?php if($_POST){if(isset($errors["email"])) { echo "error-form-input";}else{ echo "no_error-form-input" ;}} ?> type="text" name="email" value="<?php echo $email ?>" placeholder="Votre email">
+                    <span><?php if(isset($errors["email"])) { echo $errors["email"]; } ?></span>
+				</p>
+				<p>
+					<label for="message">Message</label>
+					<textarea class=<?php if($_POST){if(isset($errors["message"])) { echo "error-form-input";}else{ echo "no_error-form-input" ;}} ?> name="message" rows="8" cols="40" placeholder="Votre message"><?php echo $message ?></textarea>
+                    <span><?php if(isset($errors["message"])) { echo $errors["message"]; } ?></span>
+				</p>
+				<button type="submit" name="button">Envoyer</button>
+                <?php if(!empty($confirmation)) {echo '<p>' . $confirmation .'</p>';} ?>
+			</form>
+		</div>
+
+	</footer>
+	</div>
 </body>
 
 </html>
