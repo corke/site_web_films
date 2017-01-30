@@ -279,6 +279,9 @@ if(!empty($_POST)){
 	<footer>
 		<div id="copyright">© JULIEN-FILMS - 2017</div>
 
+        <div id="background-bottom" class="">
+
+        </div>
 
 		<div class="contact-form">
 			<form class="" id="confirmation" action="#confirmation" method="post">
